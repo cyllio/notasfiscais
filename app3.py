@@ -20,17 +20,22 @@ st.title("📊 Chatbot da Planilha")
 st.markdown("Faça perguntas sobre os dados da planilha e receba respostas inteligentes!")
 
 # Função para autenticar com a API do Google Drive
-def authenticate_google_drive(key_file_path="service_account_key.json"):
+def authenticate_google_drive():
     """Authenticates with Google Drive API using a service account."""
-    print(f"Tentando autenticar com o Google Drive usando {key_file_path}...")
+    print("Tentando autenticar com o Google Drive usando Streamlit Secrets...")
     try:
+        # Carregar o conteúdo JSON da chave da conta de serviço dos segredos
+        google_drive_key_json = st.secrets["google_drive_key"]
+
         SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
-        creds = service_account.Credentials.from_service_account_file(
-            key_file_path, scopes=SCOPES)
+        # Criar credenciais a partir do conteúdo JSON
+        creds = service_account.Credentials.from_service_account_info(
+            json.loads(google_drive_key_json), scopes=SCOPES)
+
         print("Autenticação bem-sucedida.")
         return build('drive', 'v3', credentials=creds)
     except Exception as e:
-        print(f"Erro na autenticação com o Google Drive: {e}")
+        print(f"Erro na autenticação com o Google Drive usando Secrets: {e}")
         st.error(f"Erro na autenticação com o Google Drive: {e}")
         return None
 
