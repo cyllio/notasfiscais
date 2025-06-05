@@ -1,0 +1,6 @@
+streamlit
+pandas
+requests
+openai
+google-auth
+google-api-python-client 
